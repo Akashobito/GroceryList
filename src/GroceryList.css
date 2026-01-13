@@ -318,3 +318,167 @@ body {
     display: block;
   }
 }
+
+@media(max-width: 700px) {
+  body {
+    background: url(bgfullsize.png) top left / 99vw 100vh no-repeat;
+    background-color: #F9F2D8;
+    height: 97vh !important;
+    width: 100vw !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .background-image {
+    width: 500px !important;
+    height: 97vh;
+  }
+
+  .pencil-image {
+    /* display: none; */
+    position: absolute;
+    transform: rotate(-13deg);
+    left: 390px;
+    width: 140px;
+    height: 360px;
+    top: 150px;
+  }
+
+  .enter-grocery {
+    background-image: url(input.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 39px;
+    width: 245px;
+    padding: 0px 0px;
+    padding-left: 10px;
+    background-color: #F9F2D8;
+
+    border: none;
+    outline: none;
+
+    position: absolute;
+
+    top: 107px;
+    left: 50px;
+    text-transform: capitalize;
+
+  }
+
+  .submit-button {
+    background-image: url(submit.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    width: 100px;
+    height: 100px;
+
+    position: absolute;
+
+    top: 54px;
+    right: 69px;
+
+    cursor: pointer;
+  }
+
+  .list-div {
+    background-color: #F9F2D8;
+    background-image: url(inputbox.png);
+    background-size: 257px 49px;
+    background-repeat: no-repeat;
+    margin-top: 5px;
+
+    width: 257px;
+    height: 49px;
+
+    /* padding: 30px 74px; */
+
+    display: flex;
+    align-items: center;
+
+  }
+
+  .listed-item {
+    position: absolute;
+    overflow: scroll;
+    scrollbar-width: none;
+    height: 72vh;
+    top: 155px;
+    left: 50px;
+  }
+
+  .edit-button {
+    background-image: url(edit1.png);
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    display: block;
+
+    width: 30px;
+    height: 30px;
+    color: transparent;
+    cursor: pointer;
+  }
+
+  .delete-button {
+    background-image: url(delete.png);
+    background-repeat: no-repeat;
+    background-size: 37px 27px;
+    display: block;
+
+    width: 35px;
+    height: 30px;
+    color: transparent;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+
+  .check-button {
+    background-image: url(check.png);
+    background-repeat: no-repeat;
+    background-size: 30px 27px;
+    display: block;
+
+    width: 30px;
+    height: 30px;
+    color: transparent;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-top: -1px;
+  }
+
+  .update {
+    display: flex;
+    margin-left: 5px;
+  }
+
+  .item-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .strikeout-line2 {
+    position: absolute;
+    width: 39px;
+    height: 5px;
+    opacity: 1 !important;
+    z-index: 1;
+    display: none;
+
+    right: 0;
+  }
+
+  .strikeout-line {
+    position: absolute;
+    width: 296px;
+    height: 5px;
+    opacity: 1 !important;
+    z-index: 1;
+    display: none;
+  }
+
+  .strikeout-active {
+    display: block;
+  }
+
+}
