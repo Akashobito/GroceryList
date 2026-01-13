@@ -53,7 +53,6 @@ function GroceryList() {
     if (inputText.trim()) {
       setIsAutoscroll(true);
       const newItem = {
-        id: crypto.randomUUID(),
         name: inputText.charAt(0).toUpperCase() + inputText.slice(1).toLowerCase(),
         status: 'notDone'
       }
