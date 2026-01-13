@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import './Grocerylist.css';
 import pencil from './pencilhd.png'
 import strikeout from './strikeout.png';
@@ -16,106 +15,78 @@ import salt from './salt.png';
 
 function GroceryList() {
   const [inputText, setInputText] = useState('');
-  const [groceryList, setGroceryList] = useState([
-    { "id": "21ddd3e7-ea52-4756-9a71-03d5a028df8b",
-      "name": "Chicken 5kg",
-      "status": "notDone"},
-    { "id": "21ddd3e7-ea52-4756-9a71-03d5a028df8b",
-      "name": "Chicken 5kg2",
-      "status": "notDone"}]);
-
-  const [isAutoscroll, setIsAutoscroll] = useState(true);   //to controll the autoscroll because when submit and checkout, both are scrolling
-  // const [listRef,setListRef] = useState({});
-
+  const [groceryList, setGroceryList] = useState([]);
+  const [isAutoscroll, setIsAutoscroll] = useState(true);
   const ref = useRef(null);
 
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('groceryList');
+    if (saved) {
+      setGroceryList(JSON.parse(saved));
+    }
+  }, []);
 
-  // async function getGroceryList() {
-  //   const response = await axios.get('http://localhost:3000/groceryList');
-  //   setGroceryList(response.data);
-  // }
-
-  // useEffect(() => {
-  //   getGroceryList();
-  // }, [])
+  // Save to localStorage whenever groceryList changes
+  useEffect(() => {
+    localStorage.setItem('groceryList', JSON.stringify(groceryList));
+  }, [groceryList]);
 
   useEffect(() => {
     if (ref.current && isAutoscroll) {
-      // console.log(ref.current);
       const listRef = ref.current;
-      // console.log(listRef.scrollHeight);
       listRef.scrollTop = listRef.scrollHeight;
     }
   }, [groceryList]);
 
-
   const handleInput = (event) => {
-    // console.log(event.target.value.charAt(0).toUpperCase())
     setInputText(event.target.value);
   }
 
   const handleEnter = (event) => {
-    // console.log(event.key)
     if (event.key === 'Enter') {
       handleSubmit();
     }
   }
 
-  const handleSubmit = async () => {
-    if (inputText) {
+  const handleSubmit = () => {
+    if (inputText.trim()) {
       setIsAutoscroll(true);
-      // console.log(inputText);
-      const body = {
+      const newItem = {
         id: crypto.randomUUID(),
         name: inputText.charAt(0).toUpperCase() + inputText.slice(1).toLowerCase(),
         status: 'notDone'
       }
-
-      setGroceryList([...groceryList,body]);
-
-      localStorage.setItem('groceryList',JSON.stringify(body));
-      // await axios.post('http://localhost:3000/groceryList', body);
-      // console.log(groceryList);
+      setGroceryList([...groceryList, newItem]);
       setInputText('');
-      // getGroceryList();
     }
   }
 
-  const handleEdit = async (name, id, status) => {
-    setIsAutoscroll(false)
-    // console.log('edit');
+  const handleEdit = (name, id, status) => {
+    setIsAutoscroll(false);
     const updateValue = prompt('Enter the value', name);
-    // console.log(updateValue);
-    const body = {
-      // name: updateValue
-      status: status,
-      name: updateValue === null ? name : updateValue //this is for validation if we write name: updatevalue , if the value is null it still runs 
+    if (updateValue !== null) {
+      setGroceryList(groceryList.map(item => 
+        item.id === id 
+          ? { ...item, name: updateValue.trim() || name }
+          : item
+      ));
     }
-    // await axios.put(`http://localhost:3000/groceryList/${id}`, body);
-    // getGroceryList();
   }
 
-  const handleDelete = async (index) => {
-    console.log(index)
-    // console.log(groceryList[index]);
-    groceryList.splice(index,1);
+  const handleDelete = (id) => {
     setIsAutoscroll(false);
-    // console.log('delete');
-    // await axios.delete(`http://localhost:3000/groceryList/${id}`);
-    // getGroceryList()
+    setGroceryList(groceryList.filter(item => item.id !== id));
   }
 
-  const handleCheck = async (name, id) => {
+  const handleCheck = (name, id) => {
     setIsAutoscroll(false);
-    // console.log('checked');
-    const body = {
-      name: name,
-      status: 'done'
-    }
-    await axios.put(`http://localhost:3000/groceryList/${id}`, body);
-    getGroceryList();
+    setGroceryList(groceryList.map(item => 
+      item.id === id 
+        ? { ...item, status: 'done' }
+        : item
+    ));
   }
-
 
   return (
     <>
@@ -138,31 +109,31 @@ function GroceryList() {
           autoFocus
           onChange={handleInput}
           onKeyDown={handleEnter} />
-        <a className="submit-button"
-          onClick={handleSubmit} />
+        <a className="submit-button" onClick={handleSubmit} />
 
         <div ref={ref} className="listed-item">
-          {groceryList.map((value, index) => {
-            return (
-              <div key={index} className={`item-container `}>
-                <img className={`strikeout-line ${value.status === 'notDone' ? '' : 'strikeout-active'}`} src={strikeout} />
-                <img className={`strikeout-line2 ${value.status === 'notDone' ? '' : 'strikeout-active'}`} src={strikeout} />
-                <div className={`list-div ${value.status === 'notDone' ? '' : 'checked'}`}>
-                  {/* {console.log(value.id)} */}
-                  <p style={{ display: 'inline-block', marginLeft: '20px', marginTop: '-5px' }}>{`${index + 1}. ${value.name}`}</p>
-                </div>
-                <div className="update">
-                  <a className={`edit-button ${value.status === 'notDone' ? '' : 'checked'}`} onClick={() => { if (value.status === 'notDone') { handleEdit(value.name, value.id, value.status) } }}></a>
-                  <a className="delete-button" onClick={() => { handleDelete(index) }}></a>
-                  <a className={`check-button ${value.status === 'notDone' ? '' : 'checked'}`} onClick={() => { if (value.status === 'notDone') { handleCheck(value.name, value.id) } }}></a>
-                </div>
+          {groceryList.map((value, index) => (
+            <div key={value.id} className="item-container"> {/* Use value.id as key */}
+              <img className={`strikeout-line ${value.status === 'notDone' ? '' : 'strikeout-active'}`} src={strikeout} />
+              <img className={`strikeout-line2 ${value.status === 'notDone' ? '' : 'strikeout-active'}`} src={strikeout} />
+              <div className={`list-div ${value.status === 'notDone' ? '' : 'checked'}`}>
+                <p style={{ display: 'inline-block', marginLeft: '20px', marginTop: '-5px' }}>
+                  {`${index + 1}. ${value.name}`}
+                </p>
               </div>
-            )
-          })}
+              <div className="update">
+                <a className={`edit-button ${value.status === 'notDone' ? '' : 'checked'}`} 
+                   onClick={() => value.status === 'notDone' && handleEdit(value.name, value.id, value.status)}></a>
+                <a className="delete-button" onClick={() => handleDelete(value.id)}></a>
+                <a className={`check-button ${value.status === 'notDone' ? '' : 'checked'}`} 
+                   onClick={() => value.status === 'notDone' && handleCheck(value.name, value.id)}></a>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default GroceryList
+export default GroceryList;
