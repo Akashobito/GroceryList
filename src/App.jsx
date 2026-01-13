@@ -1,5 +1,5 @@
 import React from 'react';
-import GroceryList from './grocerylist.jsx';
+import GroceryList from './GroceryList';
 
 function App(){
   return(
